@@ -436,3 +436,182 @@ alb_multimodal_sumstats %>%
 
 # difference between observed and expected difference
 tidy(t.test(alb_multimodal_sumstats_diffs$diff, mu = expected_mm_diff))
+
+# ---- visualize
+
+# proportion inf voc type elicited verbal responses
+
+alb_verbal_sumstats <- alb_verbal_sumstats %>%
+  mutate(sequence = as.factor(sequence))
+
+xlabs <- c("individual\nsyllable", "sequence")
+
+vocal_label <- data.frame(proportion_verbally_responded=c(.01),sequence = c(1.5))
+
+stat_label <- data.frame(proportion_verbally_responded=c(.9),sequence = c(1.5))
+
+# ---- Figure 2A: Caregiver verbal response rate across infant voc types
+
+p1 <- ggplot(alb_verbal_sumstats,aes(x = sequence, y = proportion_verbally_responded)) +
+          stat_summary(fun.y=mean, geom="bar", colour="black",
+                       fill="black", alpha = .15,
+                       size=1, width = 0.35) + 
+          geom_jitter(color="red", width = 0.01, alpha = .75) +
+          # geom_jitter(color="black", width = 0.01, alpha = .75) +
+          stat_summary(fun.data = mean_se, geom = "errorbar", size=1,
+                       width=0.075) +
+          geom_segment(aes(x=.65, xend=1.4, y=alb_v_isee_mean, yend=alb_v_isee_mean),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          geom_segment(aes(x=1.65, xend=2.4, y=alb_v_see_mean, yend=alb_v_see_mean),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          geom_text(data = stat_label,label = "***",size=7,color="black") +
+          coord_cartesian(ylim=c(0, 1)) +
+          labs(y = "proportion of vocalizations \n that elicited caregiver response",
+               x = "",
+               title = "Caregiver\nverbal response") +
+          theme_classic() +
+          scale_x_discrete(labels= xlabs) +
+          theme_Elm() +
+          theme(plot.title = element_text(hjust = 0.5))
+
+# ---- Figure 2B: Caregiver non-verbal response rate across infant voc types
+
+alb_nonverb_sumstats <- alb_nonverb_sumstats %>%
+  mutate(sequence = as.factor(sequence))
+
+xlabs <- c("individual\nsyllable", "sequence")
+
+nonvoc_st_label <- data.frame(proportion_nonverbal_responded=c(.9),sequence = c(1.5),response_modality="NonVocal")
+
+p2 <- ggplot(alb_nonverb_sumstats,aes(x = sequence, y = proportion_nonverbal_responded)) +
+          stat_summary(fun.y=mean, geom="bar", colour="black",
+                       fill="#8965FC", alpha = .15,
+                       size=1, width = 0.35) + 
+          geom_jitter(color="#8965FC", width = 0.01, alpha = .75) +
+          stat_summary(fun.data = mean_se, geom = "errorbar", size=1,
+                       width=0.075) +
+          geom_segment(aes(x=.65, xend=1.4, y=alb_nv_isee_mean, yend=alb_nv_isee_mean),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          geom_segment(aes(x=1.65, xend=2.4, y=alb_nv_see_mean, yend=alb_nv_see_mean),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+        #   geom_text(data = nonvoc_st_label,label = "*",size=7,color="black") +
+          coord_cartesian(ylim=c(0, 1)) +
+          labs(y = "",# str_wrap("Proportion of vocalizations which elicited caregiver response",36),
+               x = "",
+               title = "Caregiver\nnon-verbal response") +
+          theme_classic() +
+          scale_x_discrete(labels= xlabs) +
+          theme_Elm() +
+          theme(plot.title = element_text(hjust = 0.5))
+
+# ---- Figure 2C: Caregiver multimodal response rate across infant voc types
+
+alb_multimodal_sumstats <- alb_multimodal_sumstats %>%
+  mutate(sequence = as.factor(sequence))
+
+xlabs <- c("individual\nsyllable", "sequence")
+
+multimodal_st_label <- data.frame(proportion_multimodal_responded=c(.9),sequence = c(1.5),response_modality="Both")
+
+p3 <- ggplot(alb_multimodal_sumstats,aes(x = sequence, y = proportion_multimodal_responded)) +
+          stat_summary(fun.y=mean, geom="bar", colour="black",
+                       fill="#DB00B7", alpha = .15,
+                       size=1, width = 0.35) + 
+          geom_jitter(color="#DB00B7", width = 0.01, alpha = .75) +
+          stat_summary(fun.data = mean_se, geom = "errorbar", size=1,
+                       width=0.075) +
+          geom_segment(aes(x=.65, xend=1.4, y=alb_mm_isee_mean, yend=alb_mm_isee_mean),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          geom_segment(aes(x=1.65, xend=2.4, y=alb_mm_see_mean, yend=alb_mm_see_mean),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+        #   geom_text(data = multimodal_st_label,label = "*",size=7,color="black") +
+          coord_cartesian(ylim=c(0, 1)) +
+          labs(y = "",# str_wrap("Proportion of vocalizations which elicited caregiver response",36),
+               x = "",
+               title = "Caregiver\nmultimodal response") +
+          theme_classic() +
+          scale_x_discrete(labels= xlabs) +
+          theme_Elm() +
+          theme(plot.title = element_text(hjust = 0.5))
+
+# ---- Figure 2D: Verbal response expected difference compared to chance difference
+
+stat_label <- data.frame(diff=c(.6))
+
+p4 <- ggplot(alb_verbal_sumstats_diffs, aes(x = "", y = diff)) +
+        geom_jitter(color="red", width = 0.01, alpha = .75) +
+     #    geom_jitter(color="black", width = 0.01, alpha = .75) +
+        stat_summary(fun.y=mean,geom="point",shape=19,size=3) + 
+        stat_summary(fun.data = mean_se, geom = "errorbar", size=1.5, width=0.00) +
+          geom_segment(aes(x=.65, xend=1.38, y=expected_v_diff, yend=expected_v_diff),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          coord_cartesian(ylim=c(-.75, .75)) +
+          geom_text(data = stat_label, label = "*", size=7, color="black") +
+          labs(y = str_wrap("elicitation rate difference (sequence - individual syllable)",36),
+               x = str_wrap("verbal response",12)) +
+          theme_classic() +
+          theme_Elm()
+
+# ---- Figure 2E: NonVerbal response expected difference compared to chance difference
+
+p5 <- ggplot(alb_nonverb_sumstats_diffs, aes(x = "", y = diff)) +
+        geom_jitter(color="#8965FC", width = 0.01, alpha = .75) +
+        stat_summary(fun.y=mean,geom="point",shape=19,size=3) +
+        stat_summary(fun.data = mean_se, geom = "errorbar", size=1.5, width=0.00) +
+          geom_segment(aes(x=.65, xend=1.38, y=expected_nv_diff, yend=expected_nv_diff),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          coord_cartesian(ylim=c(-.75, .75)) +
+        #   geom_text(data = stat_label,label = "^",size=4,color="black") +
+          labs(y = "",#str_wrap("elicitation rate difference (sequence - isolated syllable)",36),
+               x = str_wrap("non-verbal response",12)) +
+          theme_classic() +
+          theme_Elm()
+
+# ---- Figure 2F: Multimodal response expected difference compared to chance difference
+
+stat_label <- data.frame(diff=c(-.6))
+
+p6 <- ggplot(alb_multimodal_sumstats_diffs, aes(x = "", y = diff)) +
+        geom_jitter(color="#DB00B7", width = 0.01, alpha = .75) +
+        stat_summary(fun.y=mean,geom="point",shape=19,size=3) +
+        stat_summary(fun.data = mean_se, geom = "errorbar", size=1.5, width=0.00) +
+          geom_segment(aes(x=.65, xend=1.38, y=expected_mm_diff, yend=expected_mm_diff),
+                         col="black",
+                         linetype="dotted",
+                         size=1) +
+          coord_cartesian(ylim=c(-.75, .75)) +
+          geom_text(data = stat_label,label = "**",size=7,color="black") +
+          labs(y = "",#str_wrap("elicitation rate difference (sequence - isolated syllable)",36),
+               x = str_wrap("multimodal response",12)) +
+          theme_classic() +
+          theme_Elm()
+
+# ---- Figure 2
+
+col1 <- plot_grid(p1, p4, labels = c('A', 'D'), align = "v", nrow=2)
+
+col2 <- plot_grid(p2, p5, labels = c('B', 'E'), align = "v", nrow=2)
+
+col3 <- plot_grid(p3, p6, labels = c('C', 'F'), align = "v", nrow=2)
+
+legend_path <- here("Sequence-Response","figures","legend_1.svg")
+
+legend <- ggdraw() + draw_image(magick::image_read_svg(legend_path))
+
+plot_grid(col1, col2, col3, legend, align = "hv", ncol=4, rel_widths = c(1, 1, 1, .6))
