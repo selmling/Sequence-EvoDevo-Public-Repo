@@ -5,7 +5,7 @@ import random
 import math
 
 # Set a seed for replicability
-SEED = 46
+SEED = 14 
 random.seed(SEED)
 np.random.seed(SEED)
 
