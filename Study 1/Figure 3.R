@@ -427,3 +427,4 @@ tidy(t.test(CG_resp_voc_type_elicit_stats$prop_ind_syll, mu = alb_CG_nonseq_chan
 tidy(t.test(CG_resp_voc_type_elicit_stats$prop_seqs, mu = alb_CG_seq_chance_mean))
 
 plot_grid(p1, p2, nrow = 1, labels = c("A", "B"), align = "h")
+
